@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Over | Wordle</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container { max-width: 500px; width: 100%; text-align: center; }
+
+        .icon {
+            width: 60px; height: 60px; background: #787c7e;
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; margin: 0 auto 20px; font-size: 30px;
+        }
+
+        h1 { font-size: 28px; margin-bottom: 12px; color: #121212; }
+
+        .word-reveal { font-size: 16px; margin-bottom: 8px; color: #666; }
+
+        .word-display {
+            font-size: 36px; font-weight: bold;
+            letter-spacing: 8px; color: #6aaa64; margin-bottom: 8px;
+        }
+
+        .mode-badge {
+            display: inline-block; background: #f0f0f0; color: #555;
+            font-size: 12px; padding: 3px 12px; border-radius: 20px; margin-bottom: 20px;
+        }
+
+        /* Mini board showing previous attempts */
+        .previous-board { margin: 0 auto 20px; display: inline-block; }
+
+        .prev-row {
+            display: flex; gap: 4px; margin-bottom: 4px; justify-content: center;
+        }
+
+        .prev-tile {
+            width: 42px; height: 42px; display: flex; align-items: center;
+            justify-content: center; font-size: 17px; font-weight: bold;
+            border-radius: 3px; border: 2px solid #d3d6da;
+            background: white; color: #121212;
+        }
+
+        .prev-tile.green  { background: #6aaa64; color: white; border-color: #6aaa64; }
+        .prev-tile.yellow { background: #c9b458; color: white; border-color: #c9b458; }
+        .prev-tile.gray   { background: #787c7e; color: white; border-color: #787c7e; }
+
+        .reset-info {
+            background: #fff8e1; border: 1px solid #ffe082;
+            border-radius: 8px; padding: 10px 16px;
+            margin-bottom: 22px; font-size: 13px; color: #795548;
+        }
+
+        .stats-title {
+            font-size: 11px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 12px; color: #666;
+        }
+
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 10px; margin-bottom: 26px;
+        }
+
+        .stat-item { text-align: center; }
+
+        .stat-value {
+            font-size: 30px; font-weight: bold; color: #121212; display: block;
+        }
+
+        .stat-label { font-size: 11px; color: #666; margin-top: 4px; }
+
+        .distribution { margin-bottom: 28px; }
+
+        .dist-row { display: flex; align-items: center; margin-bottom: 5px; }
+
+        .dist-label {
+            width: 15px; font-size: 13px; color: #666;
+            text-align: right; margin-right: 8px; flex-shrink: 0;
+        }
+
+        .dist-bar {
+            height: 22px; background: #ccc; display: flex; align-items: center;
+            justify-content: flex-end; padding-right: 6px; font-size: 12px;
+            font-weight: bold; color: #666; min-width: 20px;
+            transition: width 0.6s ease;
+        }
+
+        .dist-bar.filled { background: #6aaa64; color: white; }
+
+        .back-btn {
+            padding: 13px 36px; background: #6aaa64; color: white;
+            border: none; border-radius: 6px; font-size: 15px;
+            font-weight: 600; cursor: pointer; text-decoration: none;
+            display: inline-block; margin-top: 8px;
+        }
+
+        .back-btn:hover { background: #538d4e; }
+
+        @media (max-width: 480px) {
+            .word-display { font-size: 28px; letter-spacing: 4px; }
+            .stat-value   { font-size: 26px; }
+            h1            { font-size: 22px; }
+            .prev-tile    { width: 36px; height: 36px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="icon">😔</div>
+    <h1>Thanks for Playing!</h1>
+
+    <p class="word-reveal">The word was:</p>
+    <div class="word-display" id="correctWord">...</div>
+    <div class="mode-badge" id="modeBadge"></div>
+
+    <!-- Previous board attempts -->
+    <div class="previous-board" id="previousBoard"></div>
+
+    <!-- Time until reset -->
+    <div class="reset-info" id="resetInfo"></div>
+
+    <div class="stats-title">YOUR STATISTICS</div>
+    <div class="stats-grid">
+        <div class="stat-item">
+            <span class="stat-value" id="played">0</span>
+            <span class="stat-label">Played</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value" id="winRate">0</span>
+            <span class="stat-label">Win %</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value" id="currentStreak">0</span>
+            <span class="stat-label">Current<br>Streak</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value" id="maxStreak">0</span>
+            <span class="stat-label">Max<br>Streak</span>
+        </div>
+    </div>
+
+    <div class="stats-title">GUESS DISTRIBUTION</div>
+    <div class="distribution">
+        <div class="dist-row"><span class="dist-label">1</span><div class="dist-bar" id="dist1" style="width:7%">0</div></div>
+        <div class="dist-row"><span class="dist-label">2</span><div class="dist-bar" id="dist2" style="width:7%">0</div></div>
+        <div class="dist-row"><span class="dist-label">3</span><div class="dist-bar" id="dist3" style="width:7%">0</div></div>
+        <div class="dist-row"><span class="dist-label">4</span><div class="dist-bar" id="dist4" style="width:7%">0</div></div>
+        <div class="dist-row"><span class="dist-label">5</span><div class="dist-bar" id="dist5" style="width:7%">0</div></div>
+        <div class="dist-row"><span class="dist-label">6</span><div class="dist-bar" id="dist6" style="width:7%">0</div></div>
+    </div>
+
+    <a href="/game" class="back-btn">← Back to Game</a>
+</div>
+
+<script>
+    // Get mode that was played — use lastPlayedMode (persists after clearGameState)
+    const mode = localStorage.getItem('lastPlayedMode') || 'normal';
+    const modeNames = { normal: 'Normal Mode', time: '60s Time Mode', sudden: 'Sudden Death' };
+
+    document.getElementById('modeBadge').textContent = modeNames[mode] || 'Normal Mode';
+
+    // Time until midnight reset
+    function getTimeUntilReset() {
+        const now = new Date();
+        const midnight = new Date(); midnight.setHours(24, 0, 0, 0);
+        const ms = midnight - now;
+        const h  = Math.floor(ms / (1000 * 60 * 60));
+        const m  = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+        return `${h}h ${m}m`;
+    }
+
+    document.getElementById('resetInfo').textContent =
+        `This mode resets in ${getTimeUntilReset()}. Come back then to play again!`;
+
+    // Fetch the correct word for the mode that was played
+    async function loadCorrectWord() {
+        const token = localStorage.getItem('token');
+        if (!token) { window.location.href = '/login'; return; }
+
+        try {
+            const response = await fetch(`/api/reveal-word?mode=${mode}`, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('correctWord').textContent = data.word || '?????';
+            } else if (response.status === 429) {
+                document.getElementById('correctWord').textContent = '?????';
+                document.getElementById('resetInfo').textContent =
+                    'You have reached the daily reveal limit. Come back tomorrow for more reveals!';
+            } else {
+                document.getElementById('correctWord').textContent = '?????';
+            }
+        } catch (error) {
+            console.error('Error loading word:', error);
+            document.getElementById('correctWord').textContent = '?????';
+        }
+    }
+
+    // Show the board from the completed game
+    function renderPreviousBoard() {
+        const savedState = localStorage.getItem('lossGameState');
+        if (!savedState) return;
+
+        try {
+            const gs = JSON.parse(savedState);
+            if (!gs.boardState) return;
+
+            const container = document.getElementById('previousBoard');
+            container.innerHTML = '';
+
+            gs.boardState.forEach(rowData => {
+                // Only show rows that have letters typed
+                const hasLetters = rowData.some(t => t.text && t.text.trim() !== '');
+                if (!hasLetters) return;
+
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'prev-row';
+
+                rowData.forEach(tileData => {
+                    const tile = document.createElement('div');
+                    tile.className = 'prev-tile';
+                    tile.textContent = tileData.text || '';
+
+                    if (tileData.classes && tileData.classes.includes('green'))
+                        tile.classList.add('green');
+                    else if (tileData.classes && tileData.classes.includes('yellow'))
+                        tile.classList.add('yellow');
+                    else if (tileData.classes && tileData.classes.includes('gray'))
+                        tile.classList.add('gray');
+
+                    rowDiv.appendChild(tile);
+                });
+
+                container.appendChild(rowDiv);
+            });
+        } catch (e) {
+            console.error('Error rendering board:', e);
+        }
+    }
+
+    // Load stats from the backend
+    async function loadStats() {
+        const token = localStorage.getItem('token');
+        if (!token) { window.location.href = '/login'; return; }
+
+        try {
+            const response = await fetch('/api/stats/me', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (!response.ok) throw new Error('Failed to load stats');
+            const stats = await response.json();
+
+            document.getElementById('played').textContent = stats.played || 0;
+            document.getElementById('winRate').textContent = stats.winRate || 0;
+            document.getElementById('currentStreak').textContent = stats.currentStreak || 0;
+            document.getElementById('maxStreak').textContent = stats.maxStreak || 0;
+
+            const dist = stats.distribution || [0,0,0,0,0,0];
+            const maxDist = Math.max(...dist, 1);
+            dist.forEach((count, index) => {
+                const bar = document.getElementById('dist' + (index + 1));
+                if (!bar) return;
+                const pct = (count / maxDist) * 100;
+                bar.style.width = Math.max(pct, 7) + '%';
+                bar.textContent = count;
+                if (count > 0) bar.classList.add('filled');
+                else bar.classList.remove('filled');
+            });
+        } catch (error) {
+            console.error('Error loading stats:', error);
+        }
+    }
+
+    loadCorrectWord();
+    renderPreviousBoard();
+    loadStats();
+</script>
+
+</body>
+</html>

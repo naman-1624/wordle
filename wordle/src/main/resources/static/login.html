@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Wordle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'nyt-cheltenham', 'Georgia', serif;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .logo {
+            font-family: 'Old English Text MT', 'Times New Roman', serif;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #000;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .auth-box {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #121212;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #121212;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #121212;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: #121212;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background: #333;
+        }
+
+        .terms {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+
+        .terms a {
+            color: #121212;
+            text-decoration: underline;
+        }
+
+        .switch-mode {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .switch-mode a {
+            color: #121212;
+            text-decoration: underline;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+
+        .message.error {
+            background: #fee;
+            color: #c00;
+            border: 1px solid #fcc;
+        }
+
+        .message.success {
+            background: #efe;
+            color: #060;
+            border: 1px solid #cfc;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .footer a {
+            color: #666;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        #login-form,
+        #register-form {
+            display: none;
+        }
+
+        #login-form.active,
+        #register-form.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="logo">Wordle</div>
+</div>
+
+<div class="container">
+    <div class="auth-box">
+        <h1 id="form-title">Log in or create an account</h1>
+
+        <div id="message" class="message"></div>
+
+        <!-- LOGIN FORM -->
+        <div id="login-form" class="active">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Continue</button>
+            </form>
+
+            <div class="terms">
+                By continuing, you agree to the <a href="/terms-of-sale">Terms of Sale</a>,
+                <a href="/terms-of-service">Terms of Service</a>, and <a href="/privacy-policy">Privacy Policy</a>.
+            </div>
+
+            <div class="switch-mode">
+                Don't have an account? <a onclick="switchToRegister()">Create one</a>
+            </div>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div id="register-form">
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="register-username">Username</label>
+                    <input type="text" id="register-username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" required minlength="6">
+                </div>
+
+                <div class="form-group">
+                    <label for="register-confirm">Confirm Password</label>
+                    <input type="password" id="register-confirm" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Create Account</button>
+            </form>
+
+            <div class="terms">
+                By creating an account, you agree to the <a href="/terms-of-sale">Terms of Sale</a>,
+                <a href="/terms-of-service">Terms of Service</a>, and <a href="/privacy-policy">Privacy Policy</a>.
+            </div>
+
+            <div class="switch-mode">
+                Already have an account? <a onclick="switchToLogin()">Log in</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    © 2026 Wordle Game
+    <a href="/privacy-policy">Privacy Policy</a>
+    <a href="/help">Help</a>
+    <a href="/contact">Contact Us</a>
+</div>
+
+<script>
+    const API = "/api/auth";
+
+    function switchToRegister() {
+        document.getElementById('login-form').classList.remove('active');
+        document.getElementById('register-form').classList.add('active');
+        document.getElementById('form-title').textContent = 'Create an account';
+        hideMessage();
+    }
+
+    function switchToLogin() {
+        document.getElementById('register-form').classList.remove('active');
+        document.getElementById('login-form').classList.add('active');
+        document.getElementById('form-title').textContent = 'Log in or create an account';
+        hideMessage();
+    }
+
+    function showMessage(text, type) {
+        const msg = document.getElementById('message');
+        msg.textContent = text;
+        msg.className = 'message ' + type;
+        msg.style.display = 'block';
+    }
+
+    function hideMessage() {
+        document.getElementById('message').style.display = 'none';
+    }
+
+    function storeSession(data) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', data.username);
+        localStorage.setItem('role', data.role || 'USER');
+        localStorage.removeItem('gameInProgress');
+    }
+
+    function handleLogin(e) {
+        e.preventDefault();
+
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+
+        fetch(API + "/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        })
+        .then(async r => ({ ok: r.ok, data: await r.json() }))
+        .then(({ ok, data }) => {
+            if (ok && data.success) {
+                storeSession(data);
+                showMessage("Login successful! Redirecting...", "success");
+                setTimeout(() => window.location.href = "/game", 1000);
+            } else {
+                showMessage(data.message || "Login failed", "error");
+            }
+        })
+        .catch(() => {
+            showMessage("Server error. Please try again.", "error");
+        });
+    }
+
+    function handleRegister(e) {
+        e.preventDefault();
+
+        const username = document.getElementById('register-username').value;
+        const password = document.getElementById('register-password').value;
+        const confirm = document.getElementById('register-confirm').value;
+
+        if (password !== confirm) {
+            showMessage("Passwords do not match!", "error");
+            return;
+        }
+
+        fetch(API + "/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        })
+        .then(async r => ({ ok: r.ok, data: await r.json() }))
+        .then(({ ok, data }) => {
+            if (ok && data.success) {
+                storeSession(data);
+                showMessage("Account created! Redirecting...", "success");
+                setTimeout(() => window.location.href = "/game", 1000);
+            } else {
+                showMessage(data.message || "Registration failed", "error");
+            }
+        })
+        .catch(() => {
+            showMessage("Server error. Please try again.", "error");
+        });
+    }
+</script>
+
+</body>
+</html>

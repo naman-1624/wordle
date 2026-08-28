@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hints & Tips | Wordle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: #fff;
+            line-height: 1.6;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .logo {
+            font-family: 'Old English Text MT', 'Times New Roman', serif;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: #121212;
+            text-align: center;
+        }
+
+        .hint-section {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 4px solid #6aaa64;
+        }
+
+        .hint-section h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #121212;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hint-icon {
+            font-size: 24px;
+        }
+
+        .hint-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .hint-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+            color: #333;
+        }
+
+        .hint-list li:last-child {
+            border-bottom: none;
+        }
+
+        .reveal-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+        }
+
+        .reveal-section h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .reveal-section p {
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+
+        .reveal-btn {
+            background: white;
+            color: #667eea;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .reveal-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .revealed-word {
+            display: none;
+            margin-top: 30px;
+            padding: 30px;
+            background: white;
+            color: #121212;
+            border-radius: 12px;
+        }
+
+        .revealed-word.show {
+            display: block;
+        }
+
+        .word-display {
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 8px;
+            color: #6aaa64;
+            margin-bottom: 20px;
+        }
+
+        .word-info h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .word-info p {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .tip-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+            transition: box-shadow 0.3s;
+        }
+
+        .tip-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .tip-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #6aaa64;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <a href="/game" class="logo">Wordle</a>
+</div>
+
+<div class="container">
+    <h1>💡 Hints & Tips</h1>
+
+    <div class="warning">
+        <strong>⚠️ Note:</strong> Using the "Reveal Word" option will show you the answer and end your current game.
+    </div>
+
+    <!-- Strategy Hints -->
+    <div class="hint-section">
+        <h2><span class="hint-icon">🎯</span> Starting Strategy</h2>
+        <div class="hint-list">
+            <div class="tip-card">
+                <span class="tip-number">1</span>
+                <strong>Use vowel-rich words first</strong><br>
+                Start with words like ADIEU, AUDIO, or OUIJA to identify vowels early.
+            </div>
+            <div class="tip-card">
+                <span class="tip-number">2</span>
+                <strong>Common consonants matter</strong><br>
+                Letters like R, S, T, L, N appear frequently in English words.
+            </div>
+            <div class="tip-card">
+                <span class="tip-number">3</span>
+                <strong>Avoid repeating letters initially</strong><br>
+                Use five different letters in your first two guesses to maximize information.
+            </div>
+        </div>
+    </div>
+
+    <!-- Color Clues -->
+    <div class="hint-section">
+        <h2><span class="hint-icon">🎨</span> Understanding Colors</h2>
+        <div class="hint-list">
+            <div class="tip-card">
+                <span style="background: #6aaa64;" class="tip-number">✓</span>
+                <strong>Green = Correct letter in correct position</strong><br>
+                Keep this letter in the same spot for all future guesses.
+            </div>
+            <div class="tip-card">
+                <span style="background: #c9b458;" class="tip-number">!</span>
+                <strong>Yellow = Correct letter in wrong position</strong><br>
+                The letter is in the word but needs to be moved to a different position.
+            </div>
+            <div class="tip-card">
+                <span style="background: #787c7e;" class="tip-number">✗</span>
+                <strong>Gray = Letter not in the word</strong><br>
+                Eliminate this letter from all future guesses.
+            </div>
+        </div>
+    </div>
+
+    <!-- Advanced Tips -->
+    <div class="hint-section">
+        <h2><span class="hint-icon">🧠</span> Advanced Tips</h2>
+        <div class="hint-list">
+            <div class="tip-card">
+                <span class="tip-number">4</span>
+                <strong>Consider word patterns</strong><br>
+                Common patterns: -ING, -ED, -ER, -LY, -TION
+            </div>
+            <div class="tip-card">
+                <span class="tip-number">5</span>
+                <strong>Double letters are possible</strong><br>
+                Words like SPEED, BLESS, ALLEY have repeated letters.
+            </div>
+            <div class="tip-card">
+                <span class="tip-number">6</span>
+                <strong>Use process of elimination</strong><br>
+                If a letter is yellow, try it in different positions systematically.
+            </div>
+        </div>
+    </div>
+
+    <!-- Letter Frequency -->
+    <div class="hint-section">
+        <h2><span class="hint-icon">📊</span> Letter Frequency Guide</h2>
+        <div class="hint-list">
+            <div class="tip-card">
+                <strong>Most Common Starting Letters:</strong> S, C, B, T, P, A, F
+            </div>
+            <div class="tip-card">
+                <strong>Most Common Ending Letters:</strong> E, S, T, D, N, R, Y
+            </div>
+            <div class="tip-card">
+                <strong>Most Common Vowels:</strong> E, A, O, I, U (in that order)
+            </div>
+            <div class="tip-card">
+                <strong>Rare Letters:</strong> Q, Z, X, J are uncommon in 5-letter words
+            </div>
+        </div>
+    </div>
+
+    <!-- Reveal Word Section -->
+    <div class="reveal-section">
+        <h2>🔓 Need the Answer?</h2>
+        <p>Stuck? You can reveal today's word, but this will end your current game.</p>
+        <p><small>You'll also learn something interesting about the word!</small></p>
+
+        <button class="reveal-btn" onclick="revealWord()">Reveal Word</button>
+
+        <div class="revealed-word" id="revealedWord">
+            <div class="word-display" id="wordDisplay">LOADING...</div>
+            <div class="word-info">
+                <h3>📚 Definition</h3>
+                <p id="wordDefinition">Fetching definition...</p>
+
+                <h3>💭 Did You Know?</h3>
+                <p id="wordTrivia">Loading trivia...</p>
+
+                <h3>📝 Example Usage</h3>
+                <p id="wordExample">Loading example...</p>
+            </div>
+        </div>
+
+        <a href="/game" class="back-link">← Return to Game</a>
+    </div>
+</div>
+
+<script>
+    async function revealWord() {
+        const btn = document.querySelector('.reveal-btn');
+        btn.disabled = true;
+        btn.textContent = 'Revealing...';
+
+        // Priority: active game mode > last played mode > fallback to normal
+        const mode = localStorage.getItem('currentGameMode')
+                  || localStorage.getItem('lastPlayedMode')
+                  || 'normal';
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Please login to reveal the word.');
+            window.location.href = '/login';
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/reveal-word?mode=${mode}`, {
+                method: 'GET',
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const word = data.word || 'WORDLE';
+
+                document.getElementById('wordDisplay').textContent = word;
+                document.getElementById('wordDefinition').textContent =
+                    data.definition || 'A word used in the popular word-guessing game.';
+                document.getElementById('wordTrivia').textContent =
+                    data.trivia || 'to be aware';
+                document.getElementById('wordExample').textContent =
+                    data.example || `"Can you use ${word} in a sentence?"`;
+
+                document.getElementById('revealedWord').classList.add('show');
+
+                btn.textContent = 'Revealed!';
+                setTimeout(() => {
+                    btn.textContent = 'Reveal Again';
+                    btn.disabled = false;
+                }, 2000);
+            } else if (response.status === 429) {
+                const data = await response.json().catch(() => ({}));
+                btn.disabled = false;
+                btn.textContent = 'Reveal Word';
+                alert(data.message || 'You have reached the daily reveal limit. Come back tomorrow!');
+            } else if (response.status === 401) {
+                btn.disabled = false;
+                btn.textContent = 'Reveal Word';
+                alert('Your session has expired. Please login again.');
+                window.location.href = '/login';
+            } else {
+                btn.disabled = false;
+                btn.textContent = 'Reveal Word';
+                alert('Unable to reveal word. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error revealing word:', error);
+            alert('Error connecting to server.');
+            btn.disabled = false;
+            btn.textContent = 'Reveal Word';
+        }
+    }
+</script>
+
+</body>
+</html>

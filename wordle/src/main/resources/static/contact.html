@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Wordle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: #fff;
+            line-height: 1.6;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .logo {
+            font-family: 'Old English Text MT', 'Times New Roman', serif;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #121212;
+            text-align: center;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        .contact-options {
+            margin-top: 40px;
+        }
+
+        .contact-card {
+            background: #f7f7f7;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .contact-card h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #121212;
+        }
+
+        .contact-card p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .contact-card a {
+            color: #121212;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .contact-card a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #121212;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #e5e5e5;
+            margin-top: 60px;
+        }
+
+        .footer a {
+            color: #666;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <a href="/" class="logo">Wordle</a>
+</div>
+
+<div class="container">
+    <h1>Contact Us</h1>
+    <p>Have a question, feedback, or need support? We're here to help!</p>
+
+    <div class="contact-options">
+        <div class="contact-card">
+            <h2>📧 Email Support</h2>
+            <p>For general inquiries and support</p>
+            <a href="mailto:support@wordle.game">support@wordle.game</a>
+        </div>
+
+        <div class="contact-card">
+            <h2>🔒 Privacy Concerns</h2>
+            <p>For privacy-related questions</p>
+            <a href="mailto:privacy@wordle.game">privacy@wordle.game</a>
+        </div>
+
+        <div class="contact-card">
+            <h2>💼 Business Inquiries</h2>
+            <p>For partnerships and business matters</p>
+            <a href="mailto:business@wordle.game">business@wordle.game</a>
+        </div>
+
+        <div class="contact-card">
+            <h2>🐛 Report a Bug</h2>
+            <p>Found a technical issue? Let us know</p>
+            <a href="mailto:bugs@wordle.game">bugs@wordle.game</a>
+        </div>
+    </div>
+
+    <p style="margin-top: 40px;">We typically respond within 24-48 hours during business days.</p>
+
+    <div style="text-align: center;">
+        <a href="#" class="back-link" id="backLink">← Back</a>
+    </div>
+</div>
+
+<div class="footer">
+    © 2026 Wordle Game
+    <a href="/privacy-policy">Privacy Policy</a>
+    <a href="/terms-of-service">Terms of Service</a>
+    <a href="/help">Help</a>
+</div>
+
+<script>
+    // Set back link based on login status
+    const user = localStorage.getItem('user');
+    const backLink = document.getElementById('backLink');
+
+    if (user) {
+        backLink.href = '/game';
+        backLink.textContent = '← Back to Game';
+    } else {
+        backLink.href = '/login';
+        backLink.textContent = '← Back to Login';
+    }
+</script>
+
+</body>
+</html>

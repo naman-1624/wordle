@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guessed It?</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Georgia", "Times New Roman", serif;
+        background: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        text-align: center;
+        max-width: 500px;
+      }
+
+      .logo-grid {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 30px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 15px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .grid-cell {
+        aspect-ratio: 1;
+        border: 2px solid #d3d6da;
+        border-radius: 4px;
+      }
+
+      .grid-cell.white {
+        background: white;
+      }
+      .grid-cell.yellow {
+        background: #c9b458;
+        border-color: #c9b458;
+      }
+      .grid-cell.green {
+        background: #6aaa64;
+        border-color: #6aaa64;
+      }
+
+      h1 {
+        font-size: 56px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #121212;
+        letter-spacing: -1px;
+      }
+
+      .streak-message {
+        font-size: 24px;
+        line-height: 1.4;
+        color: #333;
+        margin-bottom: 40px;
+      }
+
+      .streak-message .highlight {
+        font-weight: bold;
+        color: #121212;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-bottom: 40px;
+      }
+
+      .btn {
+        padding: 14px 32px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 50px;
+        border: 2px solid #121212;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-primary {
+        background: #121212;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #333;
+        border-color: #333;
+      }
+
+      .btn-secondary {
+        background: white;
+        color: #121212;
+      }
+
+      .btn-secondary:hover {
+        background: #f5f5f5;
+      }
+
+      .footer {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .footer p {
+        margin: 5px 0;
+      }
+
+      .user-info {
+        background: #e8f5e9;
+        padding: 12px 20px;
+        border-radius: 50px;
+        margin-bottom: 20px;
+        display: inline-block;
+        font-size: 14px;
+        color: #2e7d32;
+        font-weight: 600;
+      }
+
+      .logout-link {
+        color: #2e7d32;
+        text-decoration: underline;
+        cursor: pointer;
+        margin-left: 10px;
+      }
+
+      .logout-link:hover {
+        color: #1b5e20;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 42px;
+        }
+
+        .streak-message {
+          font-size: 20px;
+        }
+
+        .button-group {
+          flex-direction: column;
+        }
+
+        .btn {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Logo Grid -->
+      <div class="logo-grid">
+        <div class="grid-cell white"></div>
+        <div class="grid-cell white"></div>
+        <div class="grid-cell white"></div>
+        <div class="grid-cell green"></div>
+        <div class="grid-cell yellow"></div>
+        <div class="grid-cell white"></div>
+        <div class="grid-cell green"></div>
+        <div class="grid-cell green"></div>
+        <div class="grid-cell green"></div>
+      </div>
+
+      <!-- Title -->
+      <h1>Guessed It?</h1>
+
+      <!-- User Info (if logged in) -->
+      <div id="userInfo" style="display: none">
+        <div class="user-info">
+          Welcome back, <strong id="username"></strong>!
+          <span class="logout-link" onclick="logout()">Logout</span>
+        </div>
+      </div>
+
+      <!-- Streak Message -->
+      <p class="streak-message" id="streakMessage">
+        Get ready to play the <br />
+        <span class="highlight">word game</span> everyone loves.
+      </p>
+
+      <!-- Buttons -->
+      <div class="button-group">
+        <!-- Login button (shown when not logged in) -->
+        <a href="/login" class="btn btn-secondary" id="loginBtn"> Login </a>
+
+        <!-- Play button (shown when logged in) -->
+        <a
+          href="/game"
+          class="btn btn-primary"
+          id="playBtn"
+          style="display: none"
+        >
+          Play
+        </a>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p>January 14, 2026</p>
+        <p>No. 1670</p>
+        <p>Edited by NAMAN MEHTA</p>
+      </div>
+    </div>
+
+    <script>
+      // Check if user is logged in (JWT token present)
+      const currentUser = localStorage.getItem("user");
+      const hasToken = !!localStorage.getItem("token");
+
+      if (currentUser && hasToken) {
+        document.getElementById("username").textContent = currentUser;
+        document.getElementById("userInfo").style.display = "block";
+        document.getElementById("loginBtn").style.display = "none";
+        document.getElementById("playBtn").style.display = "inline-block";
+
+        // Fetch live stats for the streak message
+        fetch("/api/stats/me", {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        })
+          .then((r) => r.json())
+          .then((stats) => {
+            if (stats && stats.currentStreak > 0) {
+              document.getElementById("streakMessage").innerHTML =
+                `Go ahead, add another<br>day to your <span class="highlight">${stats.currentStreak} day</span> streak.`;
+            }
+          })
+          .catch(() => {
+            /* keep default message */
+          });
+      } else {
+        document.getElementById("loginBtn").style.display = "inline-block";
+        document.getElementById("playBtn").style.display = "none";
+      }
+
+      function logout() {
+        if (confirm("Are you sure you want to logout?")) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("role");
+          localStorage.removeItem("gameInProgress");
+
+          history.pushState(null, null, location.href);
+          window.onpopstate = function () {
+            history.go(1);
+          };
+
+          window.location.replace("/");
+        }
+      }
+
+      // Prevent back button navigation
+      (function () {
+        if (window.history && window.history.pushState) {
+          window.history.pushState("forward", null, "./");
+          window.onpopstate = function () {
+            const user = localStorage.getItem("user");
+            if (!user && currentUser) {
+              window.history.pushState("forward", null, "./");
+            }
+          };
+        }
+      })();
+
+      window.addEventListener("pageshow", function (event) {
+        if (
+          event.persisted ||
+          (window.performance && window.performance.navigation.type === 2)
+        ) {
+          const newUser = localStorage.getItem("user");
+          if (newUser !== currentUser) {
+            window.location.reload(true);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Sale | Wordle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: #fff;
+            line-height: 1.6;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .logo {
+            font-family: 'Old English Text MT', 'Times New Roman', serif;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #121212;
+        }
+
+        .last-updated {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #121212;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #121212;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #e5e5e5;
+            margin-top: 60px;
+        }
+
+        .footer a {
+            color: #666;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <a href="/" class="logo">Wordle</a>
+</div>
+
+<div class="container">
+    <h1>Terms of Sale</h1>
+    <p class="last-updated">Last Updated: January 11, 2026</p>
+
+    <h2>1. Acceptance of Terms</h2>
+    <p>By accessing and using Wordle, you accept and agree to be bound by the terms and provision of this agreement.</p>
+
+    <h2>2. Use License</h2>
+    <p>Permission is granted to temporarily access Wordle for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title.</p>
+
+    <h2>3. Service Description</h2>
+    <p>Wordle is a free word-guessing game provided for entertainment purposes. We reserve the right to modify, suspend, or discontinue the service at any time without notice.</p>
+
+    <h2>4. User Accounts</h2>
+    <p>When you create an account with us, you must provide information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms.</p>
+
+    <h2>5. Intellectual Property</h2>
+    <p>The game, including all content, features, and functionality, is owned by Wordle and is protected by international copyright, trademark, and other intellectual property laws.</p>
+
+    <h2>6. Disclaimer</h2>
+    <p>Wordle is provided "as is" without warranty of any kind, either express or implied, including but not limited to the implied warranties of merchantability and fitness for a particular purpose.</p>
+
+    <h2>7. Limitation of Liability</h2>
+    <p>In no event shall Wordle or its suppliers be liable for any damages arising out of the use or inability to use Wordle.</p>
+
+    <h2>8. Contact Information</h2>
+    <p>If you have any questions about these Terms of Sale, please contact us at support@wordle.game</p>
+
+    <a href="#" class="back-link" id="backLink">← Back</a>
+</div>
+
+<div class="footer">
+    © 2026 Wordle Game
+    <a href="/privacy-policy">Privacy Policy</a>
+    <a href="/terms-of-service">Terms of Service</a>
+    <a href="/help">Help</a>
+</div>
+
+<script>
+    // Set back link based on login status
+    const user = localStorage.getItem('user');
+    const backLink = document.getElementById('backLink');
+
+    if (user) {
+        backLink.href = '/game';
+        backLink.textContent = '← Back to Game';
+    } else {
+        backLink.href = '/login';
+        backLink.textContent = '← Back to Login';
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard | Wordle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            background: white;
+            border-bottom: 1px solid #e5e5e5;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            margin: -20px -20px 20px -20px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #121212;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #121212;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #d3d6da;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: #6aaa64;
+            color: white;
+            border-color: #6aaa64;
+        }
+
+        .leaderboard-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .podium {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .podium-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 15px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .podium-item:nth-child(1) {
+            order: 2;
+            transform: scale(1.1);
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        }
+
+        .podium-item:nth-child(2) {
+            order: 1;
+            background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
+        }
+
+        .podium-item:nth-child(3) {
+            order: 3;
+            background: linear-gradient(135deg, #cd7f32 0%, #e8a87c 100%);
+        }
+
+        .rank-badge {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .podium-username {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #121212;
+        }
+
+        .podium-stats {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+        }
+
+        .leaderboard-row {
+            display: grid;
+            grid-template-columns: 50px 1fr 80px 80px 80px;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #e5e5e5;
+            transition: background 0.2s;
+        }
+
+        .leaderboard-row:hover {
+            background: #f9f9f9;
+        }
+
+        .leaderboard-row.current-user {
+            background: #e8f5e9;
+        }
+
+        .rank {
+            font-size: 18px;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .username {
+            font-weight: 600;
+            color: #121212;
+        }
+
+        .stat {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: #121212;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .back-btn {
+            display: block;
+            width: 100%;
+            max-width: 200px;
+            margin: 20px auto;
+            padding: 12px;
+            background: #6aaa64;
+            color: white;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            background: #538d4e;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            .podium {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .podium-item:nth-child(1) {
+                order: 1;
+            }
+
+            .podium-item:nth-child(2) {
+                order: 2;
+            }
+
+            .podium-item:nth-child(3) {
+                order: 3;
+            }
+
+            .leaderboard-row {
+                grid-template-columns: 40px 1fr 70px;
+                gap: 5px;
+                padding: 12px 10px;
+            }
+
+            .stat:nth-child(4),
+            .stat:nth-child(5) {
+                display: none;
+            }
+
+            .tab {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <a href="/" class="logo">🏆 Wordle Leaderboard</a>
+</div>
+
+<div class="container">
+    <h1>Global Rankings</h1>
+    <p class="subtitle">Compete with players worldwide!</p>
+
+    <div class="filter-tabs">
+        <div class="tab active" onclick="filterLeaderboard('winRate')">Win Rate</div>
+        <div class="tab" onclick="filterLeaderboard('streak')">Best Streak</div>
+        <div class="tab" onclick="filterLeaderboard('avgGuesses')">Avg Guesses</div>
+    </div>
+
+    <div class="leaderboard-card">
+        <div class="podium" id="podium">
+            <!-- Top 3 will be inserted here -->
+        </div>
+
+        <div class="leaderboard-table" id="leaderboard">
+            <!-- Rest of players will be inserted here -->
+        </div>
+    </div>
+
+    <a href="/game" class="back-btn">Back to Game</a>
+</div>
+
+<script>
+    let currentFilter = 'winRate';
+    let cached = null;
+
+    async function fetchLeaderboard() {
+        const token = localStorage.getItem('token');
+        const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
+
+        const response = await fetch('/api/stats/leaderboard?sortBy=' + currentFilter, { headers });
+        if (!response.ok) throw new Error('Failed to load leaderboard');
+
+        const players = await response.json();
+        // Shapes: {rank, username, played, won, winRate, maxStreak, currentStreak, avgGuesses}
+        return players.map(p => ({
+            username: p.username,
+            played: p.played || 0,
+            won: p.won || 0,
+            winRate: p.winRate || 0,
+            maxStreak: p.maxStreak || 0,
+            currentStreak: p.currentStreak || 0,
+            avgGuesses: p.avgGuesses ? parseFloat(p.avgGuesses).toFixed(2) : 'N/A'
+        }));
+    }
+
+    function filterLeaderboard(filterType) {
+        currentFilter = filterType;
+
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        event.target.classList.add('active');
+
+        loadAndRender();
+    }
+
+    async function loadAndRender() {
+        const podiumDiv = document.getElementById('podium');
+        const leaderboardDiv = document.getElementById('leaderboard');
+
+        podiumDiv.innerHTML = '';
+        leaderboardDiv.innerHTML = '<div class="empty-state">Loading...</div>';
+
+        try {
+            const players = await fetchLeaderboard();
+            renderLeaderboard(players);
+        } catch (error) {
+            console.error('Error loading leaderboard:', error);
+            podiumDiv.innerHTML = '';
+            leaderboardDiv.innerHTML =
+                '<div class="empty-state">Unable to load leaderboard. Please try again later.</div>';
+        }
+    }
+
+    function renderLeaderboard(sorted) {
+        const podiumDiv = document.getElementById('podium');
+        const leaderboardDiv = document.getElementById('leaderboard');
+        const currentUser = localStorage.getItem('user');
+
+        if (sorted.length === 0) {
+            podiumDiv.innerHTML = '';
+            leaderboardDiv.innerHTML = '<div class="empty-state">No players yet. Be the first!</div>';
+            return;
+        }
+
+        const medals = ['🥇', '🥈', '🥉'];
+        podiumDiv.innerHTML = sorted.slice(0, 3).map((player, idx) => `
+            <div class="podium-item">
+                <div class="rank-badge">${medals[idx]}</div>
+                <div class="podium-username">${player.username}</div>
+                <div class="podium-stats">
+                    ${currentFilter === 'winRate' ? player.winRate + '% Win' : ''}
+                    ${currentFilter === 'streak' ? 'Streak: ' + player.maxStreak : ''}
+                    ${currentFilter === 'avgGuesses' ? 'Avg: ' + player.avgGuesses + ' guesses' : ''}
+                </div>
+            </div>
+        `).join('');
+
+        const rest = sorted.slice(3);
+        let html = '';
+
+        if (rest.length > 0) {
+            html = `
+                <div class="leaderboard-row" style="background: #f5f5f5; font-weight: bold; border-bottom: 2px solid #ddd;">
+                    <div class="rank">Rank</div>
+                    <div class="username">Player</div>
+                    <div class="stat">Win %</div>
+                    <div class="stat">Streak</div>
+                    <div class="stat">Avg</div>
+                </div>
+            `;
+        }
+
+        html += rest.map((player, idx) => `
+            <div class="leaderboard-row ${player.username === currentUser ? 'current-user' : ''}">
+                <div class="rank">#${player.rank}</div>
+                <div class="username">${player.username}${player.username === currentUser ? ' (You)' : ''}</div>
+                <div class="stat"><span class="stat-value">${player.winRate}%</span></div>
+                <div class="stat"><span class="stat-value">${player.maxStreak}</span></div>
+                <div class="stat"><span class="stat-value">${player.avgGuesses}</span></div>
+            </div>
+        `).join('');
+
+        leaderboardDiv.innerHTML = html;
+    }
+
+    // Initial render
+    loadAndRender();
+</script>
+
+</body>
+</html>

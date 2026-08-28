@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Wordle</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .admin-header h1 {
+            font-size: 30px;
+            color: #121212;
+            margin-bottom: 5px;
+        }
+
+        .admin-header p {
+            color: #666;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 22px;
+            margin-bottom: 24px;
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: #121212;
+            border-bottom: 2px solid #6aaa64;
+            padding-bottom: 8px;
+            display: inline-block;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .overview-item {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .overview-item .value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #121212;
+        }
+
+        .overview-item .label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        th {
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #fafafa;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .role-admin {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .role-user {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 6px;
+        }
+
+        .btn-primary {
+            background: #6aaa64;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #538d4e;
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-edit {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #5a6fd0;
+        }
+
+        .pack-item {
+            padding: 12px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .pack-item .pack-name {
+            font-weight: bold;
+            color: #121212;
+        }
+
+        .pack-item .pack-desc {
+            color: #666;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .pack-item .pack-actions {
+            margin-top: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid #d3d6da;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+        }
+
+        .form-note {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #6aaa64;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .toast-popup {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #121212;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .toast-popup.show {
+            opacity: 1;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+        }
+
+        @media (max-width: 600px) {
+            .overview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            th, td {
+                padding: 8px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="toast-popup" id="toast"></div>
+
+<div class="container">
+    <a href="/game" class="back-link">&larr; Back to Game</a>
+
+    <div class="admin-header">
+        <h1>Admin Panel</h1>
+        <p>Manage players and custom word packs</p>
+    </div>
+
+    <!-- Overview -->
+    <div class="card">
+        <h2>Overview</h2>
+        <div class="overview-grid">
+            <div class="overview-item">
+                <div class="value" id="ovTotalUsers">-</div>
+                <div class="label">Total Users</div>
+            </div>
+            <div class="overview-item">
+                <div class="value" id="ovTotalGames">-</div>
+                <div class="label">Total Games</div>
+            </div>
+            <div class="overview-item">
+                <div class="value" id="ovGamesToday">-</div>
+                <div class="label">Games (24h)</div>
+            </div>
+            <div class="overview-item">
+                <div class="value" id="ovGamesWon">-</div>
+                <div class="label">Games Won</div>
+            </div>
+            <div class="overview-item">
+                <div class="value" id="ovActivePlayers">-</div>
+                <div class="label">Active Players</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users -->
+    <div class="card">
+        <h2>Users</h2>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Played</th>
+                        <th>Won</th>
+                        <th>Streak</th>
+                        <th>Max Streak</th>
+                        <th>Joined</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTable"></tbody>
+            </table>
+            <div class="empty-state" id="usersEmpty" style="display: none;">No users yet.</div>
+        </div>
+    </div>
+
+    <!-- Packs -->
+    <div class="card">
+        <h2>Custom Word Packs</h2>
+
+        <div style="margin-bottom: 16px; text-align: right;">
+            <button class="btn btn-primary" id="newPackBtn" onclick="openPackForm()">+ Create Pack</button>
+        </div>
+
+        <div id="packsList">
+            <div class="empty-state">Loading...</div>
+        </div>
+    </div>
+</div>
+
+<!-- Pack form modal (uses style.css .menu-modal/.menu-content styles) -->
+<div class="menu-modal" id="packModal" onclick="closePackFormOnBackdrop(event)">
+    <div class="menu-content" style="max-width: 520px; width: 90%; max-height: 90vh; overflow-y: auto;">
+        <div class="menu-header">
+            <h2 id="packFormTitle">Create Word Pack</h2>
+            <button class="close-btn" onclick="closePackForm()">&times;</button>
+        </div>
+
+        <div class="form-group">
+            <label for="packName">Pack Name</label>
+            <input type="text" id="packName" placeholder="e.g. Animals" maxlength="60">
+        </div>
+
+        <div class="form-group">
+            <label for="packDesc">Description</label>
+            <input type="text" id="packDesc" placeholder="e.g. Words about animals" maxlength="200">
+        </div>
+
+        <div class="form-group">
+            <label for="packWords">Words (one per line, 5 letters each, minimum 10)</label>
+            <textarea id="packWords" placeholder="tiger&#10;whale&#10;raven&#10;..."></textarea>
+            <div class="form-note">Each word must be exactly 5 letters and a valid dictionary word.</div>
+        </div>
+
+        <div style="text-align: right;">
+            <button class="btn btn-primary" id="savePackBtn" onclick="savePack()">Save Pack</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
+
+    if (!token || role !== 'ADMIN') {
+        alert('You do not have permission to access the admin panel.');
+        window.location.href = '/game';
+        throw new Error('Unauthorized access');
+    }
+
+    let editingPackId = null;
+    let packsCache = [];
+
+    function toast(message) {
+        const t = document.getElementById('toast');
+        t.textContent = message;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    function api(path, options) {
+        options = options || {};
+        options.headers = options.headers || {};
+        options.headers['Authorization'] = 'Bearer ' + token;
+        return fetch(path, options);
+    }
+
+    async function loadOverview() {
+        try {
+            const r = await api('/api/admin/overview');
+            if (!r.ok) throw new Error('Failed');
+            const data = await r.json();
+            document.getElementById('ovTotalUsers').textContent = data.totalUsers;
+            document.getElementById('ovTotalGames').textContent = data.totalGames;
+            document.getElementById('ovGamesToday').textContent = data.gamesToday;
+            document.getElementById('ovGamesWon').textContent = data.gamesWon;
+            document.getElementById('ovActivePlayers').textContent = data.activePlayers;
+        } catch (e) {
+            console.error('Error loading overview:', e);
+        }
+    }
+
+    async function loadUsers() {
+        try {
+            const r = await api('/api/admin/users');
+            if (!r.ok) throw new Error('Failed');
+            const users = await r.json();
+            const tbody = document.getElementById('usersTable');
+            const empty = document.getElementById('usersEmpty');
+
+            if (users.length === 0) {
+                tbody.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+
+            empty.style.display = 'none';
+            tbody.innerHTML = users.map(u => `
+                <tr>
+                    <td><strong>${u.username}</strong></td>
+                    <td><span class="role-badge ${u.role === 'ADMIN' ? 'role-admin' : 'role-user'}">${u.role}</span></td>
+                    <td>${u.played}</td>
+                    <td>${u.won}</td>
+                    <td>${u.currentStreak}</td>
+                    <td>${u.maxStreak}</td>
+                    <td>${new Date(u.createdAt).toLocaleDateString()}</td>
+                </tr>
+            `).join('');
+        } catch (e) {
+            console.error('Error loading users:', e);
+            document.getElementById('usersEmpty').style.display = 'block';
+            document.getElementById('usersEmpty').textContent = 'Unable to load users.';
+        }
+    }
+
+    async function loadPacks() {
+        const list = document.getElementById('packsList');
+        try {
+            const r = await api('/api/admin/packs');
+            if (!r.ok) throw new Error('Failed');
+            const packs = await r.json();
+            packsCache = packs;
+
+            if (packs.length === 0) {
+                list.innerHTML = '<div class="empty-state">No word packs yet. Create your first one!</div>';
+                return;
+            }
+
+            list.innerHTML = packs.map(p => `
+                <div class="pack-item">
+                    <div class="pack-name">${p.name} <span style="color:#999;font-weight:normal;">(${p.wordCount} words)</span></div>
+                    <div class="pack-desc">${p.description || 'No description'}</div>
+                    <div class="pack-actions">
+                        <button class="btn btn-edit btn-small" onclick="editPack(${p.id})">Edit</button>
+                        <button class="btn btn-danger btn-small" onclick="deletePack(${p.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        } catch (e) {
+            console.error('Error loading packs:', e);
+            list.innerHTML = '<div class="empty-state">Unable to load packs.</div>';
+        }
+    }
+
+    function openPackForm() {
+        editingPackId = null;
+        document.getElementById('packFormTitle').textContent = 'Create Word Pack';
+        document.getElementById('packName').value = '';
+        document.getElementById('packDesc').value = '';
+        document.getElementById('packWords').value = '';
+        document.getElementById('packModal').style.display = 'flex';
+    }
+
+    async function editPack(id) {
+        editingPackId = id;
+        document.getElementById('packFormTitle').textContent = 'Edit Word Pack';
+        document.getElementById('packModal').style.display = 'flex';
+
+        try {
+            const r = await api('/api/admin/packs/' + id);
+            if (!r.ok) throw new Error('Failed');
+            const pack = await r.json();
+            document.getElementById('packName').value = pack.name || '';
+            document.getElementById('packDesc').value = pack.description || '';
+            document.getElementById('packWords').value = (pack.words || []).join('\n');
+        } catch (e) {
+            console.error('Error loading pack:', e);
+            toast('Unable to load pack details');
+            closePackForm();
+        }
+    }
+
+    function closePackForm() {
+        document.getElementById('packModal').style.display = 'none';
+    }
+
+    function closePackFormOnBackdrop(event) {
+        if (event.target === document.getElementById('packModal')) closePackForm();
+    }
+
+    async function savePack() {
+        const name = document.getElementById('packName').value.trim();
+        const desc = document.getElementById('packDesc').value.trim();
+        const words = document.getElementById('packWords').value
+            .split(/\r?\n/)
+            .map(w => w.trim().toLowerCase())
+            .filter(w => w.length > 0);
+
+        if (!name) { toast('Please enter a pack name'); return; }
+        if (words.length < 10) { toast('A pack needs at least 10 words'); return; }
+
+        const body = { name, description: desc, words };
+
+        try {
+            const r = await api(
+                editingPackId ? '/api/admin/packs/' + editingPackId : '/api/admin/packs',
+                {
+                    method: editingPackId ? 'PUT' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                }
+            );
+
+            if (r.ok) {
+                const data = await r.json();
+                toast('Pack "' + data.name + '" saved with ' + data.wordCount + ' words');
+                closePackForm();
+                loadPacks();
+            } else {
+                const err = await r.json().catch(() => ({}));
+                toast(err.message || 'Failed to save pack');
+            }
+        } catch (e) {
+            console.error('Error saving pack:', e);
+            toast('Server error saving pack');
+        }
+    }
+
+    async function deletePack(id) {
+        if (!confirm('Are you sure you want to delete this pack?')) return;
+        try {
+            const r = await api('/api/admin/packs/' + id, { method: 'DELETE' });
+            if (r.ok) {
+                toast('Pack deleted');
+                loadPacks();
+            } else {
+                toast('Failed to delete pack');
+            }
+        } catch (e) {
+            console.error('Error deleting pack:', e);
+            toast('Server error deleting pack');
+        }
+    }
+
+    loadOverview();
+    loadUsers();
+    loadPacks();
+</script>
+
+</body>
+</html>

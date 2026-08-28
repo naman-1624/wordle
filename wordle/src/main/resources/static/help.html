@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help | Wordle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: #fff;
+            line-height: 1.6;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .logo {
+            font-family: 'Old English Text MT', 'Times New Roman', serif;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: #121212;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #121212;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .example {
+            background: #f7f7f7;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .tile-example {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            margin: 0 5px;
+            border: 2px solid #d3d6da;
+            font-size: 20px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+        }
+
+        .green { background: #6aaa64; color: white; border-color: #6aaa64; }
+        .yellow { background: #c9b458; color: white; border-color: #c9b458; }
+        .gray { background: #787c7e; color: white; border-color: #787c7e; }
+
+        .faq {
+            margin-top: 30px;
+        }
+
+        .faq-item {
+            margin-bottom: 25px;
+        }
+
+        .faq-question {
+            font-weight: bold;
+            font-size: 18px;
+            color: #121212;
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #121212;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #e5e5e5;
+            margin-top: 60px;
+        }
+
+        .footer a {
+            color: #666;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <a href="/" class="logo">Wordle</a>
+</div>
+
+<div class="container">
+    <h1>Help & How to Play</h1>
+
+    <h2>How to Play</h2>
+    <p>Guess the Wordle in 6 tries.</p>
+    <p>Each guess must be a valid 5-letter word. Hit the enter button to submit.</p>
+    <p>After each guess, the color of the tiles will change to show how close your guess was to the word.</p>
+
+    <div class="example">
+        <p><strong>Examples</strong></p>
+        <p style="margin-top: 15px;">
+            <span class="tile-example green">W</span>
+            <span class="tile-example">E</span>
+            <span class="tile-example">A</span>
+            <span class="tile-example">R</span>
+            <span class="tile-example">Y</span>
+        </p>
+        <p>The letter <strong>W</strong> is in the word and in the correct spot.</p>
+
+        <p style="margin-top: 20px;">
+            <span class="tile-example">P</span>
+            <span class="tile-example yellow">I</span>
+            <span class="tile-example">L</span>
+            <span class="tile-example">L</span>
+            <span class="tile-example">S</span>
+        </p>
+        <p>The letter <strong>I</strong> is in the word but in the wrong spot.</p>
+
+        <p style="margin-top: 20px;">
+            <span class="tile-example">V</span>
+            <span class="tile-example">A</span>
+            <span class="tile-example">G</span>
+            <span class="tile-example gray">U</span>
+            <span class="tile-example">E</span>
+        </p>
+        <p>The letter <strong>U</strong> is not in the word in any spot.</p>
+    </div>
+
+    <h2>Game Modes</h2>
+    <p><strong>Normal Mode:</strong> Classic Wordle - You have 6 attempts to guess the word.</p>
+    <p><strong>60s Time Mode:</strong> Race against the clock! Guess the word within 60 seconds.</p>
+    <p><strong>Sudden Death:</strong> One wrong guess and it's game over. Only for the brave!</p>
+
+    <div class="faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: Can I play Wordle more than once a day?</div>
+            <p>Yes! Unlike some Wordle versions, you can play as many times as you want. Just select "Change Mode" to start a new game.</p>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: Do I need an account to play?</div>
+            <p>No, you can play without an account. However, creating an account allows you to track your statistics and compete with other players.</p>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: What browsers are supported?</div>
+            <p>Wordle works on all modern browsers including Chrome, Firefox, Safari, and Edge.</p>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: Can I use proper nouns?</div>
+            <p>No, only common 5-letter words are accepted. Proper nouns, abbreviations, and plurals ending in 'S' may not be in the word list.</p>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: How do I delete my account?</div>
+            <p>Please contact us at support@wordle.game to request account deletion.</p>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: I found a bug. How do I report it?</div>
+            <p>Please email us at support@wordle.game with details about the issue you encountered.</p>
+        </div>
+    </div>
+
+    <h2>Need More Help?</h2>
+    <p>If you have additional questions or need support, please contact us at <strong>support@wordle.game</strong></p>
+
+    <a href="#" class="back-link" id="backLink">← Back</a>
+</div>
+
+<div class="footer">
+    © 2026 Wordle Game
+    <a href="/privacy-policy">Privacy Policy</a>
+    <a href="/terms-of-service">Terms of Service</a>
+    <a href="/contact">Contact Us</a>
+</div>
+
+<script>
+    // Set back link based on login status
+    const user = localStorage.getItem('user');
+    const backLink = document.getElementById('backLink');
+
+    if (user) {
+        backLink.href = '/game';
+        backLink.textContent = '← Back to Game';
+    } else {
+        backLink.href = '/login';
+        backLink.textContent = '← Back to Login';
+    }
+</script>
+
+</body>
+</html>
