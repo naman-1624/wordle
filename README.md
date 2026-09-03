@@ -74,5 +74,5 @@ Once started, open your browser and navigate to `http://localhost:8080`.
 
 ## 👤 Author
 
-*   **Aditya Agrawal** ,** Naman Mehta**
+*   **Aditya Agrawal** ,Naman Mehta
   
