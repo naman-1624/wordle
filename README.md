@@ -74,6 +74,5 @@ Once started, open your browser and navigate to `http://localhost:8080`.
 
 ## 👤 Author
 
-*   **Aditya Agrawal** – B.Tech in Information Technology, Medi-Caps University
-*   **GitHub:** [@Aditya-Agrawal-Dev](https://github.com)
-](https://github.com/naman-1624/wordle)
+*   **Aditya Agrawal** ,** Naman Mehta**
+  
